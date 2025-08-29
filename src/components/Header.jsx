@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchQuery } from '../redux/slices/productSlice';
 
 const Header = ({ insideHome }) => {
-  // ✅ Get wishlist state
+  const dispatch = useDispatch();
+  const cartCount = useSelector((state) => state.cart.length);
   const wishlistCount = useSelector((state) => state.wishlist.length);
+  const searchQuery = useSelector((state) => state.product.searchQuery);
 
   return (
     <nav className="flex bg-blue-400 fixed w-full p-5 text-white z-50">
@@ -16,9 +19,11 @@ const Header = ({ insideHome }) => {
           <li className="list-none inline-block px-5">
             <input
               style={{ width: '300px' }}
-              className="rounded border p-2"
+              className="rounded border p-2 text-black"
               placeholder="Search products Name"
               type="text"
+              value={searchQuery}
+              onChange={(e) => dispatch(setSearchQuery(e.target.value))} // ✅ update redux state
             />
           </li>
         )}
@@ -34,13 +39,13 @@ const Header = ({ insideHome }) => {
           <Link to='/cart'>
             <i className="fa-solid fa-cart-plus text-green-600"></i> Cart 
             <span className="bg-black text-white rounded p-1 ml-1">
-              0
+              {cartCount}
             </span>
           </Link>
         </li>
       </ul>
     </nav>
   );
-}
+};
 
 export default Header;

@@ -7,12 +7,19 @@ import { fetchProducts } from "../redux/slices/productSlice";
 const Home = () => {
   const dispatch = useDispatch();
 
-  // ✅ Correct slice key: "product" (not productReducer)
-  const { allProducts, loading, errorMsg } = useSelector((state) => state.product);
+  // ✅ Get products and searchQuery from Redux
+  const { allProducts, loading, errorMsg, searchQuery } = useSelector(
+    (state) => state.product
+  );
 
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  // ✅ Filter products based on searchQuery
+  const filteredProducts = allProducts.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -31,8 +38,8 @@ const Home = () => {
           <>
             {errorMsg && <div className="text-red-500">{errorMsg}</div>}
             <div className="grid grid-cols-4 gap-4">
-              {allProducts?.length > 0 ? (
-                allProducts.map((product) => (
+              {filteredProducts?.length > 0 ? (
+                filteredProducts.map((product) => (
                   <div
                     key={product.id}
                     className="rounded border p-2 shadow border-blue-500 shadow-blue-800"

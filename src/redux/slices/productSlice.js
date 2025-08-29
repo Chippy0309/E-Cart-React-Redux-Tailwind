@@ -1,13 +1,12 @@
+// productSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// 🔹 Async thunk for fetching products
 export const fetchProducts = createAsyncThunk(
-  'product/fetchProducts', // keep slice key consistent with store
+  'product/fetchProducts',
   async (_, { rejectWithValue }) => {
     try {
       const result = await axios.get("https://dummyjson.com/products");
-      // store in sessionStorage for caching
       sessionStorage.setItem("allProducts", JSON.stringify(result.data.products));
       return result.data.products;
     } catch (error) {
@@ -22,14 +21,17 @@ const productSlice = createSlice({
     allProducts: [],
     loading: false,
     errorMsg: "",
+    searchQuery: ""   // ✅ add search query state
   },
   reducers: {
-    // optional: load cached products from sessionStorage
     loadFromCache: (state) => {
       const cached = sessionStorage.getItem("allProducts");
       if (cached) {
         state.allProducts = JSON.parse(cached);
       }
+    },
+    setSearchQuery: (state, action) => {   // ✅ update search query
+      state.searchQuery = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -52,8 +54,5 @@ const productSlice = createSlice({
   }
 });
 
-// ✅ Export actions
-export const { loadFromCache } = productSlice.actions;
-
-// ✅ Export reducer
+export const { loadFromCache, setSearchQuery } = productSlice.actions;
 export default productSlice.reducer;

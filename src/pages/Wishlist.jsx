@@ -2,15 +2,22 @@ import React from "react";
 import Header from "../components/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../redux/slices/wishlistSlice";
+import { addToCart } from "../redux/slices/cartSlice";
 import { Link } from "react-router-dom";
 
 const Wishlist = () => {
-  // ✅ wishlist is just an array
   const wishlist = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
 
   const handleRemove = (product) => {
     dispatch(removeFromWishlist(product));
+    alert(`${product.title} removed from wishlist`);
+  };
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    dispatch(removeFromWishlist(product)); // ✅ Remove from wishlist if moved to cart
+    alert(`${product.title} added to cart from wishlist`);
   };
 
   return (
@@ -48,7 +55,7 @@ const Wishlist = () => {
                     <i className="fa-solid fa-heart-circle-xmark text-red-600"></i>
                   </button>
                   <button
-                    onClick={() => alert("Cart not implemented yet!")}
+                    onClick={() => handleAddToCart(item)}
                     className="text-xl"
                     title="Add to Cart"
                   >
@@ -60,13 +67,14 @@ const Wishlist = () => {
           </div>
         ) : (
           <div className="text-center mt-10">
-            {/* ✅ Use a real Lottie animation embed or fallback image */}
             <img
               className="mx-auto mb-4"
               src="https://www.grocarto.com/assets/images/User/gif/cartGif.gif"
               alt="Empty Wishlist"
             />
-            <h2 className="text-2xl text-gray-600 p-5">Your wishlist is empty! </h2>
+            <h2 className="text-2xl text-gray-600 p-5">
+              Your wishlist is empty!
+            </h2>
           </div>
         )}
       </div>
