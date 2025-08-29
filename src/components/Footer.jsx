@@ -52,7 +52,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <p className="text-center mt-3">Copyright &copy; May 2025 Batch, E-cart. Built with React/Redux.</p>
+            <p className="text-center mt-3">Copyright &copy; CKB | E-Cart. Built with React/Redux.</p>
         </div>
     );
 }
